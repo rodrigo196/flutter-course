@@ -1,21 +1,64 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import './answer.dart';
+import './question.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _MyAppState();
+  }
+}
 
-  void answerQuestion() {
-    print("Answer choosen!");
+class _MyAppState extends State<MyApp> {
+  var _questionIndex = 0;
+
+  final questions = const [
+    {
+      'questionText': 'What\'s your favorite color?',
+      'answers': [
+        'Black',
+        'Red',
+        'Green',
+        'White',
+      ],
+    },
+    {
+      'questionText': 'What\'s your favorite animal?',
+      'answers': [
+        'Rabit',
+        'Snake',
+        'Elephant',
+        'Lion',
+      ]
+    },
+    {
+      'questionText': 'What\'s your favorite instructor?',
+      'answers': [
+        'Max',
+        'Max',
+        'Max',
+        'Max',
+      ]
+    },
+  ];
+
+  void _answerQuestion() {
+    if (_questionIndex < questions.length - 1) {
+      setState(() {
+        _questionIndex = _questionIndex + 1;
+      });
+    } else {
+      setState(() {
+        _questionIndex = 0;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
-      'What\'s your favorite color?',
-      'What\'s your favorite animal?'
-    ];
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -23,19 +66,13 @@ class MyApp extends StatelessWidget {
         ),
         body: Column(
           children: <Widget>[
-            Text('The question!'),
-            RaisedButton(
-              child: Text("Answer 1"), onPressed: answerQuestion,
+            Question(
+              questions[_questionIndex]['questionText'],
             ),
-            RaisedButton(
-              child: Text("Answer 2"),
-              onPressed: () => print("Answer 2 choosen!"),
-            ),
-            RaisedButton(
-              child: Text("Answer 3"), onPressed: () {
-              print("Answer 3 choosen!");
-            },
-            ),
+            ...(questions[_questionIndex]['answers'] as List<String>)
+                .map((answer) {
+              return Answer(_answerQuestion, answer);
+            }).toList(),
           ],
         ),
       ),
