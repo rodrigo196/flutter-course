@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.indigoAccent,
           fontFamily: 'Quicksand',
           textTheme: ThemeData.light().textTheme.copyWith(
-            headline6: TextStyle(
+                headline6: TextStyle(
                   fontFamily: 'OpenSans',
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -46,6 +46,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [];
+  bool _showChart = false;
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((element) {
@@ -68,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       _userTransactions.add(newTX);
-      _userTransactions.sort((a,b) => b.date.compareTo(a.date));
+      _userTransactions.sort((a, b) => b.date.compareTo(a.date));
     });
   }
 
@@ -119,14 +120,32 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              height: chartHeight,
-              child: Chart(_recentTransactions),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Show chart',
+                ),
+                Switch(
+                  value: _showChart,
+                  onChanged: (value) {
+                    setState(() {
+                      _showChart = value;
+                    });
+                  },
+                ),
+              ],
             ),
-            Container(
-              height: listHeight,
-              child: TransactionList(_userTransactions, _deleteTransaction),
-            ),
+            _showChart
+                ? Container(
+                    height: chartHeight,
+                    child: Chart(_recentTransactions),
+                  )
+                : Container(
+                    height: listHeight,
+                    child:
+                        TransactionList(_userTransactions, _deleteTransaction),
+                  ),
           ],
         ),
       ),
