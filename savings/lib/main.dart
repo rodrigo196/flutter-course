@@ -89,8 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     final isLandScape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+        mediaQuery.orientation == Orientation.landscape;
 
     final appBar = AppBar(
       title: Text(
@@ -123,18 +124,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final charHeightRatio = isLandScape ? 0.7 : 0.3;
 
-    final chartHeight = (MediaQuery.of(context).size.height -
-            MediaQuery.of(context).padding.top -
+    final chartHeight = (mediaQuery.size.height -
+            mediaQuery.padding.top -
             appBar.preferredSize.height) *
         charHeightRatio;
 
     final listHeight = isLandScape
-        ? (MediaQuery.of(context).size.height -
-            MediaQuery.of(context).padding.top -
+        ? (mediaQuery.size.height -
+            mediaQuery.padding.top -
             appBar.preferredSize.height -
             40)
-        : (MediaQuery.of(context).size.height -
-                MediaQuery.of(context).padding.top -
+        : (mediaQuery.size.height -
+                mediaQuery.padding.top -
                 appBar.preferredSize.height) *
             (1 - charHeightRatio);
 

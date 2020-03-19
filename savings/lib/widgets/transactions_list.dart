@@ -28,7 +28,7 @@ class TransactionList extends StatelessWidget {
                     height: 10,
                   ),
                   Container(
-                    height:  constraints.maxHeight - 30,
+                    height: constraints.maxHeight - 30,
                     child: Image.asset(
                       'assets/images/waiting.png',
                       fit: BoxFit.cover,
@@ -57,11 +57,18 @@ class TransactionList extends StatelessWidget {
                         style: Theme.of(context).textTheme.headline6,
                       ),
                       subtitle: Text(DateFormat.yMMMd().format(tx.date)),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete),
-                        color: Theme.of(context).errorColor,
-                        onPressed: () => _deleteTx(tx.id),
-                      ),
+                      trailing: MediaQuery.of(context).size.width > 460
+                          ? FlatButton.icon(
+                              onPressed: () => _deleteTx(tx.id),
+                              icon: Icon(Icons.delete),
+                              label: Text("Delete"),
+                              textColor: Theme.of(context).errorColor,
+                            )
+                          : IconButton(
+                              icon: Icon(Icons.delete),
+                              color: Theme.of(context).errorColor,
+                              onPressed: () => _deleteTx(tx.id),
+                            ),
                     ),
                   );
                 },
