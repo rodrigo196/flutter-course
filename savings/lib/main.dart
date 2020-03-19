@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:savings/widgets/chart.dart';
-import 'package:savings/widgets/new_transaction.dart';
-import 'package:savings/widgets/transactions_list.dart';
+import './widgets/chart.dart';
+import './widgets/new_transaction.dart';
+import './widgets/transactions_list.dart';
 
-import 'models/transaction.dart';
+import './models/transaction.dart';
 
 void main() => runApp(MyApp());
 
@@ -89,6 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLandScape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     final appBar = AppBar(
       title: Text(
         'Personal expenses',
@@ -101,17 +104,39 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
-    final charHeightRatio = 0.3;
+    final landscapeSwitch = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'Show chart',
+        ),
+        Switch(
+          value: _showChart,
+          onChanged: (value) {
+            setState(() {
+              _showChart = value;
+            });
+          },
+        ),
+      ],
+    );
+
+    final charHeightRatio = isLandScape ? 0.7 : 0.3;
 
     final chartHeight = (MediaQuery.of(context).size.height -
             MediaQuery.of(context).padding.top -
             appBar.preferredSize.height) *
         charHeightRatio;
 
-    final listHeight = (MediaQuery.of(context).size.height -
+    final listHeight = isLandScape
+        ? (MediaQuery.of(context).size.height -
             MediaQuery.of(context).padding.top -
-            appBar.preferredSize.height) *
-        (1 - charHeightRatio);
+            appBar.preferredSize.height -
+            40)
+        : (MediaQuery.of(context).size.height -
+                MediaQuery.of(context).padding.top -
+                appBar.preferredSize.height) *
+            (1 - charHeightRatio);
 
     return Scaffold(
       appBar: appBar,
@@ -120,32 +145,17 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Show chart',
-                ),
-                Switch(
-                  value: _showChart,
-                  onChanged: (value) {
-                    setState(() {
-                      _showChart = value;
-                    });
-                  },
-                ),
-              ],
-            ),
-            _showChart
-                ? Container(
-                    height: chartHeight,
-                    child: Chart(_recentTransactions),
-                  )
-                : Container(
-                    height: listHeight,
-                    child:
-                        TransactionList(_userTransactions, _deleteTransaction),
-                  ),
+            if (isLandScape) landscapeSwitch,
+            if (!isLandScape || _showChart)
+              Container(
+                height: chartHeight,
+                child: Chart(_recentTransactions),
+              ),
+            if (!isLandScape || !_showChart)
+              Container(
+                height: listHeight,
+                child: TransactionList(_userTransactions, _deleteTransaction),
+              ),
           ],
         ),
       ),
