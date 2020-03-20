@@ -7,7 +7,7 @@ class AdaptativeRaisedButton extends StatelessWidget {
   final String text;
   final Function handler;
 
-  AdaptativeRaisedButton({@required this.text, @required this.handler});
+  const AdaptativeRaisedButton({@required this.text, @required this.handler});
 
   @override
   Widget build(BuildContext context) {

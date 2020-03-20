@@ -95,32 +95,39 @@ class _MyHomePageState extends State<MyHomePage> {
     final mediaQuery = MediaQuery.of(context);
     final isLandScape = mediaQuery.orientation == Orientation.landscape;
 
-    final PreferredSizeWidget appBar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: Text(
-              'Personal expenses',
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () => _startAddNewTransaction(context),
-                  child: Icon(CupertinoIcons.add),
-                )
-              ],
-            ),
-          )
-        : AppBar(
-            title: Text(
-              'Personal expenses',
-            ),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () => _startAddNewTransaction(context),
-              ),
-            ],
-          );
+    Widget _buildMaterialAppBar() {
+      return AppBar(
+        title: const Text(
+          'Personal expenses',
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => _startAddNewTransaction(context),
+          ),
+        ],
+      );
+    }
+
+    Widget _buildCupertinoAppBar() {
+      return CupertinoNavigationBar(
+        middle: const Text(
+          'Personal expenses',
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            GestureDetector(
+              onTap: () => _startAddNewTransaction(context),
+              child: const Icon(CupertinoIcons.add),
+            )
+          ],
+        ),
+      );
+    }
+
+    final PreferredSizeWidget appBar =
+        Platform.isIOS ? _buildCupertinoAppBar() : _buildMaterialAppBar();
 
     final landscapeSwitch = Row(
       mainAxisAlignment: MainAxisAlignment.center,

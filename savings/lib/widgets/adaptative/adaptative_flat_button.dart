@@ -7,7 +7,7 @@ class AdaptativeFlatButton extends StatelessWidget {
   final String text;
   final Function handler;
 
-  AdaptativeFlatButton({@required this.text, @required this.handler});
+  const AdaptativeFlatButton({@required this.text, @required this.handler});
 
   @override
   Widget build(BuildContext context) {

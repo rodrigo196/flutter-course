@@ -9,7 +9,7 @@ import './adaptative/adaptative_raised_button.dart';
 class NewTransaction extends StatefulWidget {
   final Function addTxHandler;
 
-  NewTransaction(this.addTxHandler);
+  const NewTransaction(this.addTxHandler);
 
   @override
   _NewTransactionState createState() => _NewTransactionState();
@@ -64,13 +64,13 @@ class _NewTransactionState extends State<NewTransaction> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               TextField(
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: const InputDecoration(labelText: 'Title'),
                 controller: _titleController,
                 keyboardType: TextInputType.text,
                 onSubmitted: (_) => _submitData(),
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Amount'),
+                decoration: const InputDecoration(labelText: 'Amount'),
                 controller: _amountController,
                 keyboardType: TextInputType.number,
                 onSubmitted: (_) => _submitData(),

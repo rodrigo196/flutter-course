@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 class AdaptativeDatePicker {
   final BuildContext context;
 
-  AdaptativeDatePicker({@required this.context});
+  const AdaptativeDatePicker({@required this.context});
 
   void presentDatePicker(
       {@required DateTime initialDate,
