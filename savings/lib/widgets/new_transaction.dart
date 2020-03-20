@@ -1,8 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:savings/widgets/adaptative/adaptative_date_picker.dart';
+
+import './adaptative/adaptative_flat_button.dart';
+import './adaptative/adaptative_raised_button.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTxHandler;
@@ -31,18 +33,19 @@ class _NewTransactionState extends State<NewTransaction> {
   }
 
   void _presentDatePicker() {
-    showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(2000),
-            lastDate: DateTime.now())
-        .then((value) {
-      if (value != null) {
-        setState(() {
-          _pickedDate = value;
+    final datePicker = AdaptativeDatePicker(context: context);
+
+    datePicker.presentDatePicker(
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime.now(),
+        handler: (value) {
+          if (value != null) {
+            setState(() {
+              _pickedDate = value;
+            });
+          }
         });
-      }
-    });
   }
 
   @override
@@ -83,25 +86,15 @@ class _NewTransactionState extends State<NewTransaction> {
                             : 'Transacion date: ${DateFormat.yMMMd().format(_pickedDate)}',
                       ),
                     ),
-                    Platform.isIOS
-                        ? CupertinoButton(
-                            onPressed: _presentDatePicker,
-                            child: Text('Chose date'),
-                          )
-                        : FlatButton(
-                            textColor: Theme.of(context).primaryColor,
-                            child: Text('Chose date'),
-                            onPressed: _presentDatePicker,
-                          ),
+                    AdaptativeFlatButton(
+                      text: "Choose date",
+                      handler: _presentDatePicker,
+                    ),
                   ],
                 ),
               ),
-              RaisedButton(
-                child: Text('Add Transaction'),
-                textColor: Theme.of(context).textTheme.button.color,
-                color: Theme.of(context).primaryColor,
-                onPressed: _submitData,
-              ),
+              AdaptativeRaisedButton(
+                  text: 'Add Transaction', handler: _submitData),
             ],
           ),
         ),
