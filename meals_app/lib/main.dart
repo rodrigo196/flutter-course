@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './categories_screen.dart';
-import './category_meals_screen.dart';
+import './screens/categories_screen.dart';
+import './screens/category_meals_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,8 +10,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'DeliMeals',
       theme: ThemeData(
-        primarySwatch: Colors.pink,
-        accentColor: Colors.amber,
+        primarySwatch: Colors.green,
+        accentColor: Colors.cyan,
         canvasColor: const Color.fromRGBO(255, 254, 229, 1),
         fontFamily: 'Raleway',
         textTheme: ThemeData.light().textTheme.copyWith(
