@@ -31,13 +31,13 @@ class MyApp extends StatelessWidget {
             ),
       ),
       routes: {
-        '/': (ctx) => CategoriesScreen(),
-        CategoryMealsScreen.ROUTE_NAME: (ctx) => CategoryMealsScreen(),
-        MealDetailScreen.ROUTE_NAME: (ctx) => MealDetailScreen(),
+        CategoriesScreen.ROUTE_NAME: (_) => CategoriesScreen(),
+        CategoryMealsScreen.ROUTE_NAME: (_) => CategoryMealsScreen(),
+        MealDetailScreen.ROUTE_NAME: (_) => MealDetailScreen(),
       },
-      onUnknownRoute: (settings) => MaterialPageRoute(
+      onUnknownRoute: (_) => MaterialPageRoute(
         // Fallback for unknown routes 
-        builder: (context) => CategoryMealsScreen(),
+        builder: (_) => CategoryMealsScreen(),
       ),
     );
   }
