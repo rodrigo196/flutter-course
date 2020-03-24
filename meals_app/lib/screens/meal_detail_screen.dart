@@ -14,7 +14,8 @@ class MealDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildContainer({@required Widget child}) {
+  Widget _buildContainer(
+      {@required Widget child, @required MediaQueryData mediaQuery}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -24,7 +25,7 @@ class MealDetailScreen extends StatelessWidget {
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.all(10),
       height: 150,
-      width: 300,
+      width: mediaQuery.size.width,
       child: child,
     );
   }
@@ -33,6 +34,7 @@ class MealDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mealId = ModalRoute.of(context).settings.arguments as String;
     final meal = DUMMY_MEALS.firstWhere((element) => element.id == mealId);
+    final mediaQuery = MediaQuery.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +44,7 @@ class MealDetailScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Container(
-              height: 300,
+              height: mediaQuery.size.height * 0.4,
               width: double.infinity,
               child: Image.network(
                 meal.imageUrl,
@@ -51,6 +53,7 @@ class MealDetailScreen extends StatelessWidget {
             ),
             _buildTitleSection(context, 'Ingredients'),
             _buildContainer(
+              mediaQuery: mediaQuery,
               child: ListView.builder(
                 itemBuilder: (_, index) => Card(
                   color: Theme.of(context).accentColor,
@@ -67,22 +70,24 @@ class MealDetailScreen extends StatelessWidget {
             ),
             _buildTitleSection(context, 'Steps'),
             _buildContainer(
+              mediaQuery: mediaQuery,
               child: ListView.builder(
-                  itemCount: meal.steps.length,
-                  itemBuilder: (context, index) => Column(
-                        children: <Widget>[
-                          ListTile(
-                            leading: CircleAvatar(
-                              child: Text('# ${index + 1}'),
-                            ),
-                            title: Text(meal.steps[index]),
-                          ),
-                          Divider(
-                            height: 2,
-                            color: Colors.grey,
-                          ),
-                        ],
-                      )),
+                itemCount: meal.steps.length,
+                itemBuilder: (context, index) => Column(
+                  children: <Widget>[
+                    ListTile(
+                      leading: CircleAvatar(
+                        child: Text('# ${index + 1}'),
+                      ),
+                      title: Text(meal.steps[index]),
+                    ),
+                    Divider(
+                      height: 2,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
