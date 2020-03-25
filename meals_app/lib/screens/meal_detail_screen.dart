@@ -55,14 +55,15 @@ class MealDetailScreen extends StatelessWidget {
             _buildContainer(
               mediaQuery: mediaQuery,
               child: ListView.builder(
-                itemBuilder: (_, index) => Card(
-                  color: Theme.of(context).accentColor,
+                itemBuilder: (_, index) => Container(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       vertical: 5,
                       horizontal: 10,
                     ),
-                    child: Text(meal.ingredients[index]),
+                    child: Text(
+                      meal.ingredients[index],
+                    ),
                   ),
                 ),
                 itemCount: meal.ingredients.length,
