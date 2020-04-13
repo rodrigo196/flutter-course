@@ -1,8 +1,28 @@
 import 'package:flutter/material.dart';
 
+import '../screens/user_products_screen.dart';
 import '../screens/orders_screen.dart';
 
 class AppDrawer extends StatelessWidget {
+  
+  Widget _buildMenuItem(BuildContext context, IconData iconData, String text,
+      String destinyRoute) {
+    return Column(
+      children: <Widget>[
+        Divider(),
+        ListTile(
+          leading: Icon(iconData),
+          title: Text(text),
+          onTap: () => Navigator.of(
+            context,
+          ).pushReplacementNamed(
+            destinyRoute,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -12,18 +32,23 @@ class AppDrawer extends StatelessWidget {
             title: const Text('Hello friend!'),
             automaticallyImplyLeading: false,
           ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.shop),
-            title: const Text('Shop'),
-            onTap: () => Navigator.of(context).pushReplacementNamed('/'),
+          _buildMenuItem(
+            context,
+            Icons.shop,
+            'Shop',
+            '/',
           ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.payment),
-            title: const Text('Orders'),
-            onTap: () => Navigator.of(context)
-                .pushReplacementNamed(OrdersScreen.ROUTE_NAME),
+          _buildMenuItem(
+            context,
+            Icons.payment,
+            'Orders',
+            OrdersScreen.ROUTE_NAME,
+          ),
+          _buildMenuItem(
+            context,
+            Icons.phone_android,
+            'My products',
+            UserProductsScreen.ROUTE_NAME,
           ),
         ],
       ),
