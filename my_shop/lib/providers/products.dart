@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import './product.dart';
 
@@ -47,14 +50,31 @@ class Products with ChangeNotifier {
   }
 
   void addProduct(Product product) {
-    final newProduct = Product(
-        id: DateTime.now().toString(),
-        description: product.description,
-        imageUrl: product.imageUrl,
-        price: product.price,
-        title: product.title);
-    _items.add(newProduct);
-    notifyListeners();
+    final url = 'https://flutter-course-4d8b0.firebaseio.com/products.json';
+
+    http
+        .post(
+      url,
+      body: json.encode({
+        'title': product.title,
+        'description': product.description,
+        'imageUrl': product.imageUrl,
+        'price': product.price,
+        'isFavorite': product.isFavorite
+      }),
+    )
+        .then((response) {
+      if (response.statusCode == 200) {
+        final newProduct = Product(
+            id: json.decode(response.body)['name'],
+            description: product.description,
+            imageUrl: product.imageUrl,
+            price: product.price,
+            title: product.title);
+        _items.add(newProduct);
+        notifyListeners();
+      }
+    });
   }
 
   Product findById(String id) {
@@ -69,8 +89,12 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id){
-    _items.removeWhere((element) => element.id == id);
-    notifyListeners();
+  void deleteProduct(String id) {
+    final url = 'https://flutter-course-4d8b0.firebaseio.com/products.json/$id';
+
+    http.delete(url).then((value) {
+      _items.removeWhere((element) => element.id == id);
+      notifyListeners();
+    });
   }
 }
