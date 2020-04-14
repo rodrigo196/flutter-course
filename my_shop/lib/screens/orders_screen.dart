@@ -5,42 +5,8 @@ import 'package:provider/provider.dart';
 import '../providers/orders.dart' show Orders;
 import '../widgets/order_item.dart';
 
-class OrdersScreen extends StatefulWidget {
+class OrdersScreen extends StatelessWidget {
   static const ROUTE_NAME = '/orders';
-
-  @override
-  _OrdersScreenState createState() => _OrdersScreenState();
-}
-
-class _OrdersScreenState extends State<OrdersScreen> {
-  var _isInit = true;
-  var _isLoading = false;
-
-  Orders orders;
-
-  @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      _isLoading = true;
-      orders = Provider.of<Orders>(context);
-      orders.fetchOrders().catchError((_) {
-        setState(() {
-          _isLoading = false;
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error on fetch orders!'),
-            ),
-          );
-        });
-      }).then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +15,30 @@ class _OrdersScreenState extends State<OrdersScreen> {
         title: const Text('Your orders'),
       ),
       drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              itemBuilder: (ctx, index) => OrderItem(
-                orders.orders[index],
-              ),
-              itemCount: orders.orders.length,
-            ),
+      body: FutureBuilder(
+          future: Provider.of<Orders>(context, listen: false).fetchOrders(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error on fetch data!'),
+                );
+              } else {
+                return Consumer<Orders>(
+                  builder: (context, orders, child) => ListView.builder(
+                    itemBuilder: (ctx, index) => OrderItem(
+                      orders.orders[index],
+                    ),
+                    itemCount: orders.orders.length,
+                  ),
+                );
+              }
+            }
+          }),
     );
   }
 }
