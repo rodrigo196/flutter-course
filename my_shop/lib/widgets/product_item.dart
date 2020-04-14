@@ -6,6 +6,21 @@ import '../screens/product_detail_screen.dart';
 import '../providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
+  Future<void> _toogleFavorite(BuildContext ctx, Product product) async {
+    try {
+      await product.toogleFavorite();
+    } catch (_) {
+      Scaffold.of(ctx).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error ocorred when updating favorite state!',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
@@ -28,7 +43,10 @@ class ProductItem extends StatelessWidget {
             builder: (ctx, product, _) => IconButton(
               icon: Icon(
                   product.isFavorite ? Icons.favorite : Icons.favorite_border),
-              onPressed: () => product.toogleFavorite(),
+              onPressed: () => _toogleFavorite(
+                context,
+                product,
+              ),
               color: Theme.of(context).accentColor,
             ),
           ),
@@ -48,9 +66,11 @@ class ProductItem extends StatelessWidget {
               Scaffold.of(context).showSnackBar(SnackBar(
                 content: const Text('Added item to cart!'),
                 duration: Duration(seconds: 2),
-                action: SnackBarAction(label: 'UNDO', onPressed: () {
-                  cart.removeSingleItem(product.id);
-                }),
+                action: SnackBarAction(
+                    label: 'UNDO',
+                    onPressed: () {
+                      cart.removeSingleItem(product.id);
+                    }),
               ));
             },
             color: Theme.of(context).accentColor,

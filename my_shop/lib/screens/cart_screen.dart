@@ -5,14 +5,63 @@ import '../providers/cart.dart' show Cart;
 import '../widgets/cart_item.dart';
 import '../providers/orders.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   static const ROUTE_NAME = './cart-screen';
+
+  @override
+  _CartScreenState createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  var _isAddingOrder = false;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future<void> _placeOrder() async {
+    final cart = Provider.of<Cart>(
+      context,
+      listen: false,
+    );
+
+    if (cart.items.length == 0) {
+      return;
+    }
+
+    setState(() {
+      _isAddingOrder = true;
+    });
+
+    try {
+      await Provider.of<Orders>(
+        context,
+        listen: false,
+      ).addOrder(
+        cart.items.values.toList(),
+        cart.totalAmount,
+      );
+      cart.clearCart();
+    } catch (error) {
+      print(error.toString());
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error on place order!',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isAddingOrder = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('Your Cart'),
       ),
@@ -40,20 +89,13 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  FlatButton(
-                    child: const Text('Order now'),
-                    onPressed: () {
-                      Provider.of<Orders>(
-                        context,
-                        listen: false,
-                      ).addOrder(
-                        cart.items.values.toList(),
-                        cart.totalAmount,
-                      );
-                      cart.clearCart();
-                    },
-                    textColor: Theme.of(context).primaryColor,
-                  ),
+                  _isAddingOrder
+                      ? CircularProgressIndicator()
+                      : FlatButton(
+                          child: const Text('Order now'),
+                          onPressed: _placeOrder,
+                          textColor: Theme.of(context).primaryColor,
+                        ),
                 ],
               ),
             ),
