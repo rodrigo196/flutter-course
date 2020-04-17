@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_shop/providers/auth.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/product.dart';
@@ -6,9 +7,10 @@ import '../screens/product_detail_screen.dart';
 import '../providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
-  Future<void> _toogleFavorite(BuildContext ctx, Product product) async {
+  Future<void> _toogleFavorite(BuildContext ctx, Product product,
+      String authToken, String userID) async {
     try {
-      await product.toogleFavorite();
+      await product.toogleFavorite(authToken, userID);
     } catch (_) {
       Scaffold.of(ctx).showSnackBar(
         SnackBar(
@@ -25,6 +27,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -43,10 +46,8 @@ class ProductItem extends StatelessWidget {
             builder: (ctx, product, _) => IconButton(
               icon: Icon(
                   product.isFavorite ? Icons.favorite : Icons.favorite_border),
-              onPressed: () => _toogleFavorite(
-                context,
-                product,
-              ),
+              onPressed: () =>
+                  _toogleFavorite(context, product, auth.token, auth.userId),
               color: Theme.of(context).accentColor,
             ),
           ),

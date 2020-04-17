@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import './product.dart';
 import '../models/http_exception.dart';
 
-
 class Products with ChangeNotifier {
   List<Product> _items = [
     // Product(
@@ -51,8 +50,17 @@ class Products with ChangeNotifier {
     return items.where((element) => element.isFavorite).toList();
   }
 
+  final String authToken;
+
+  Products(this.authToken, List<Product> previusItems) {
+    if (previusItems != null) {
+      _items = previusItems;
+    }
+  }
+
   Future<void> fetchProducts() async {
-    final url = 'https://flutter-course-4d8b0.firebaseio.com/products.json';
+    final url =
+        'https://flutter-course-4d8b0.firebaseio.com/products.json?auth=$authToken';
 
     try {
       final response = await http.get(url);
@@ -77,7 +85,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) {
-    final url = 'https://flutter-course-4d8b0.firebaseio.com/products.json';
+    final url =
+        'https://flutter-course-4d8b0.firebaseio.com/products.json?auth=$authToken';
 
     return http
         .post(
@@ -87,7 +96,6 @@ class Products with ChangeNotifier {
         'description': product.description,
         'imageUrl': product.imageUrl,
         'price': product.price,
-        'isFavorite': product.isFavorite
       }),
     )
         .then((response) {
@@ -115,7 +123,7 @@ class Products with ChangeNotifier {
     final productIndex = _items.indexWhere((element) => element.id == id);
     if (productIndex >= 0) {
       final url =
-          'https://flutter-course-4d8b0.firebaseio.com/products/$id.json';
+          'https://flutter-course-4d8b0.firebaseio.com/products/$id.json?auth=$authToken';
       await http.patch(url,
           body: json.encode({
             'title': product.title,
@@ -129,7 +137,8 @@ class Products with ChangeNotifier {
   }
 
   void deleteProduct(String id) {
-    final url = 'https://flutter-course-4d8b0.firebaseio.com/products/$id.json';
+    final url =
+        'https://flutter-course-4d8b0.firebaseio.com/products/$id.json?auth=$authToken';
     final existentProductIndex =
         _items.indexWhere((element) => element.id == id);
     final existentProduct = _items[existentProductIndex];
@@ -138,8 +147,7 @@ class Products with ChangeNotifier {
       if (response.statusCode >= 400) {
         throw HttpException('Could not delete product.');
       }
-    }).catchError(
-        (_) => _items.insert(existentProductIndex, existentProduct));
+    }).catchError((_) => _items.insert(existentProductIndex, existentProduct));
     notifyListeners();
   }
 }

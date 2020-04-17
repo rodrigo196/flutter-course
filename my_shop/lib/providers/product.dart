@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_shop/models/http_exception.dart';
 
-class Product with ChangeNotifier{
+class Product with ChangeNotifier {
   final String id;
   final String title;
   final String description;
@@ -21,17 +21,16 @@ class Product with ChangeNotifier{
     this.isFavorite = false,
   });
 
-  Future<void> toogleFavorite() async {
+  Future<void> toogleFavorite(String authToken, String userId) async {
     final oldState = isFavorite;
-    
+
     isFavorite = !isFavorite;
     notifyListeners();
 
-    final url = 'https://flutter-course-4d8b0.firebaseio.com/products/$id.json';
-    final response = await http.patch(url, body: jsonEncode({
-      'isFavorite' : isFavorite
-    }));
-    
+    final url =
+        'https://flutter-course-4d8b0.firebaseio.com/userFavorites/$userId/$id.json?auth=$authToken';
+    final response = await http.put(url, body: jsonEncode(isFavorite));
+
     if (response.statusCode >= 400) {
       isFavorite = oldState;
       notifyListeners();
