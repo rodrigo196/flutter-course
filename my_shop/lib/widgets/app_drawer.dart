@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:my_shop/providers/auth.dart';
+import 'package:provider/provider.dart';
 
 import '../screens/user_products_screen.dart';
 import '../screens/orders_screen.dart';
 
 class AppDrawer extends StatelessWidget {
-  
   Widget _buildMenuItem(BuildContext context, IconData iconData, String text,
       String destinyRoute) {
     return Column(
@@ -49,6 +50,19 @@ class AppDrawer extends StatelessWidget {
             Icons.phone_android,
             'My products',
             UserProductsScreen.ROUTE_NAME,
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('/');
+              Provider.of<Auth>(
+                context,
+                listen: false,
+              ).logout();
+            },
           ),
         ],
       ),
