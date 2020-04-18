@@ -27,7 +27,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchProducts([bool filterByUser = false]) async {
-    final filterString = filterByUser ? '&orderBy="creatorId"&equalTo="$userId"' : '';
+    final filterString =
+        filterByUser ? '&orderBy="creatorId"&equalTo="$userId"' : '';
     final url =
         'https://flutter-course-4d8b0.firebaseio.com/products.json?auth=$authToken$filterString';
 
@@ -51,7 +52,8 @@ class Products with ChangeNotifier {
           title: productData['title'],
           description: productData['description'],
           price: productData['price'],
-          isFavorite: favoriteData == null ? false : favoriteData[prodcutId] ?? false,
+          isFavorite:
+              favoriteData == null ? false : favoriteData[prodcutId] ?? false,
           imageUrl: productData['imageUrl'],
         ));
       });
@@ -74,7 +76,7 @@ class Products with ChangeNotifier {
         'description': product.description,
         'imageUrl': product.imageUrl,
         'price': product.price,
-        'creatorId' : userId,
+        'creatorId': userId,
       }),
     )
         .then((response) {
